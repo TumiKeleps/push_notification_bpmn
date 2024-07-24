@@ -1,9 +1,3 @@
-/home/keleper/Telkom/rica-workflow/src/main/java/io/camunda/connector/http/rest/HttpJsonFunction.java
-/home/keleper/Telkom/rica-workflow/src/main/java/za/co/telkom/bpmn/worker/nothing/PartyResponse.java
-/home/keleper/Telkom/rica-workflow/src/main/java/za/co/telkom/bpmn/worker/nothing/CreditBureauResponse.java
-/home/keleper/Telkom/rica-workflow/src/main/java/za/co/telkom/bpmn/worker/nothing/NothingWorker.java
-/home/keleper/Telkom/rica-workflow/src/main/java/za/co/telkom/bpmn/worker/nothing/IccidResponse.java
-/home/keleper/Telkom/rica-workflow/src/main/java/io/camunda/connector/http/rest/model/HttpJsonRequest.java
-/home/keleper/Telkom/rica-workflow/src/main/java/za/co/telkom/bpmn/WorkflowApplication.java
-/home/keleper/Telkom/rica-workflow/src/main/java/za/co/telkom/bpmn/worker/nothing/IVSResponse.java
-/home/keleper/Telkom/rica-workflow/src/main/java/za/co/telkom/bpmn/worker/nothing/IVSRequest.java
+/home/sulemamr/Downloads/push_notification_bpmn/push-notification-workflow/src/main/java/io/camunda/connector/http/rest/model/HttpJsonRequest.java
+/home/sulemamr/Downloads/push_notification_bpmn/push-notification-workflow/src/main/java/io/camunda/connector/http/rest/HttpJsonFunction.java
+/home/sulemamr/Downloads/push_notification_bpmn/push-notification-workflow/src/main/java/za/co/telkom/bpmn/WorkflowApplication.java
