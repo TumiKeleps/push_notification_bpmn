@@ -1,0 +1,9 @@
+za/co/telkom/bpmn/worker/nothing/NothingWorker.class
+za/co/telkom/bpmn/WorkflowApplication.class
+za/co/telkom/bpmn/worker/nothing/IccidResponse.class
+io/camunda/connector/http/rest/HttpJsonFunction.class
+za/co/telkom/bpmn/worker/nothing/IVSRequest.class
+za/co/telkom/bpmn/worker/nothing/IVSResponse.class
+za/co/telkom/bpmn/worker/nothing/CreditBureauResponse.class
+io/camunda/connector/http/rest/model/HttpJsonRequest.class
+za/co/telkom/bpmn/worker/nothing/PartyResponse.class

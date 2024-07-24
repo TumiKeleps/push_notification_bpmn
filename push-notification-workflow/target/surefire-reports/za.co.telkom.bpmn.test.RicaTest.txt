@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: za.co.telkom.bpmn.test.RicaTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 78.97 s -- in za.co.telkom.bpmn.test.RicaTest
