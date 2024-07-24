@@ -80,6 +80,8 @@ public class PushTest {
 			zeebe.newCompleteCommand(userTaskJob.getKey()).variables(variables).send().join();
 		} else {
 			zeebe.newCompleteCommand(userTaskJob.getKey()).send().join();
+
+			//
 		}
 	}
 
