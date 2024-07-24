@@ -81,7 +81,7 @@ public class PushTest {
 		} else {
 			zeebe.newCompleteCommand(userTaskJob.getKey()).send().join();
 
-			//
+			
 		}
 	}
 
