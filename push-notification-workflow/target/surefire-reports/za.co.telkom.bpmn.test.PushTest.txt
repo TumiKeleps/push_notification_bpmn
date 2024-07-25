@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: za.co.telkom.bpmn.test.PushTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.05 s -- in za.co.telkom.bpmn.test.PushTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.735 s -- in za.co.telkom.bpmn.test.PushTest

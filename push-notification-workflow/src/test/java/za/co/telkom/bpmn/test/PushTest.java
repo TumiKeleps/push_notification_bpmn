@@ -34,6 +34,7 @@ import io.camunda.zeebe.process.test.api.ZeebeTestEngine;
 import io.camunda.zeebe.spring.test.ZeebeSpringTest;
 import lombok.extern.slf4j.Slf4j;
 import za.co.telkom.bpmn.WorkflowApplication;
+import za.co.telkom.bpmn.NothingWorker;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT, classes = WorkflowApplication.class)
 @ZeebeSpringTest
@@ -48,14 +49,132 @@ public class PushTest {
 
 	private static ClientAndServer mockServer;
 
-	// @BeforeAll
-	// static void startMockito() {
 
-	// }
+	//Test Create Push on DB 
+	//Test The Error Condition : Bad Request
+	//@Test
+	public void createPushFailureBadRequest()throws Exception{
 
-	// Test RICA end to end happy day
+		mockServer = startClientAndServer(2020);
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+		MockServerClient mockServerClient = new MockServerClient("localhost", 2020);
+
+		//Mock Create Push Notification Service's Response
+			mockServerClient
+			.when(
+					request()
+							.withMethod("POST")
+							.withPath("/v1/api/push-notification/extended/create/")
+			)
+			.respond(
+					response().withStatusCode(400)
+					.withHeaders(
+							new Header("Content-Type", "application/json; charset=utf-8"),
+							new Header("Cache-Control","public, max-age=86400"))
+					.withBody(new Gson().toJson("Failed : Bad Request Error "))
+			);
+
+
+		ProcessInstanceEvent processInstanceEvent = zeebe.newCreateInstanceCommand()
+				.bpmnProcessId("process-push-notification")
+				.latestVersion()
+				.variables(Map.of("customerType","Prepaid","profileType","ONNET","duration","11:27:55",
+				"userName","johndoe@gmail.com","launchtime","2024-11-01'T'13:00:00","header","","body","{}","campaignType","General"))
+				.send().join();
+
+		// Now the process should run to the end
+		waitForProcessInstanceCompleted(processInstanceEvent, Duration.ofSeconds(5));
+
+		assertThat(processInstanceEvent)
+		.hasPassedElement("find_line_manager")
+		.hasNotPassedElement("create_on_db")
+		.isCompleted();		
+	}
+
+	//Test The Error Condition : PreCondition
+	//@Test
+	public void createPushFailurePreCondition()throws Exception{
+
+		mockServer = startClientAndServer(2020);
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+		MockServerClient mockServerClient = new MockServerClient("localhost", 2020);
+
+		//Mock Create Push Notification Service's Response
+			mockServerClient
+			.when(
+					request()
+							.withMethod("POST")
+							.withPath("/v1/api/push-notification/extended/create/")
+			)
+			.respond(
+					response().withStatusCode(412)
+					.withHeaders(
+							new Header("Content-Type", "application/json; charset=utf-8"),
+							new Header("Cache-Control","public, max-age=86400"))
+					.withBody(new Gson().toJson("Failed : Precondition Not Met"))
+			);
+
+
+		ProcessInstanceEvent processInstanceEvent = zeebe.newCreateInstanceCommand()
+				.bpmnProcessId("process-push-notification")
+				.latestVersion()
+				.variables(Map.of("customerType","Prepaid","profileType","ONNET","duration","11:27:55",
+				"userName","johndoe@gmail.com","launchtime","2024-11-01'T'13:00:00","header","","body","{}","campaignType","General"))
+				.send().join();
+
+		// Now the process should run to the end
+		waitForProcessInstanceCompleted(processInstanceEvent, Duration.ofSeconds(5));
+
+		assertThat(processInstanceEvent)
+		.hasPassedElement("find_line_manager")
+		.hasNotPassedElement("create_on_db")
+		.isCompleted();		
+	}
+
+
+	//Test The Error Condition : Service Unavailable
+	//@Test
+	public void createPushFailureServiceUnavail()throws Exception{
+
+		mockServer = startClientAndServer(2020);
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+		MockServerClient mockServerClient = new MockServerClient("localhost", 2020);
+
+		//Mock Create Push Notification Service's Response
+			mockServerClient
+			.when(
+					request()
+							.withMethod("POST")
+							.withPath("/v1/api/push-notification/extended/create/")
+			)
+			.respond(
+					response().withStatusCode(503)
+					.withHeaders(
+							new Header("Content-Type", "application/json; charset=utf-8"),
+							new Header("Cache-Control","public, max-age=86400"))
+					.withBody(new Gson().toJson("Failed : Service Unavailable"))
+			);
+
+
+		ProcessInstanceEvent processInstanceEvent = zeebe.newCreateInstanceCommand()
+				.bpmnProcessId("process-push-notification")
+				.latestVersion()
+				.variables(Map.of("customerType","Prepaid","profileType","ONNET","duration","11:27:55",
+				"userName","johndoe@gmail.com","launchtime","2024-11-01'T'13:00:00","header","","body","{}","campaignType","General"))
+				.send().join();
+
+		// Now the process should run to the end
+		waitForProcessInstanceCompleted(processInstanceEvent, Duration.ofSeconds(5));
+
+		assertThat(processInstanceEvent)
+		.hasPassedElement("find_line_manager")
+		.hasNotPassedElement("create_on_db")
+		.isCompleted();		
+	}
+
 
 	
+
 
 	public void waitForUserTaskAndComplete(String userTaskId, Map<String, Object> variables)
 			throws InterruptedException, TimeoutException {
@@ -80,14 +199,7 @@ public class PushTest {
 			zeebe.newCompleteCommand(userTaskJob.getKey()).variables(variables).send().join();
 		} else {
 			zeebe.newCompleteCommand(userTaskJob.getKey()).send().join();
-
-			
 		}
-	}
-
-	@AfterAll
-	public static void stopMockServer() {
-		mockServer.stop();
 	}
 
 }

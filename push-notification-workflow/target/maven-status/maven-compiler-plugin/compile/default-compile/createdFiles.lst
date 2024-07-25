@@ -1,3 +1,4 @@
 io/camunda/connector/http/rest/HttpJsonFunction.class
+za/co/telkom/bpmn/NothingWorker.class
 io/camunda/connector/http/rest/model/HttpJsonRequest.class
 za/co/telkom/bpmn/WorkflowApplication.class
