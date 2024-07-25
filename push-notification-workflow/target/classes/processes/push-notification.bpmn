@@ -53,6 +53,13 @@
         <bpmn:flowNodeRef>Event_1fd7jmp</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>find_line_manager</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Event_0hgrstu</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>patch-decline</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0i19e8z</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1jo3vxf</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1tms5ac</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_014k8ph</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1xgmd3r</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_15baheh</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_0xeknrj" name="Human Task">
         <bpmn:flowNodeRef>await-approval</bpmn:flowNodeRef>
@@ -91,7 +98,7 @@
     <bpmn:sequenceFlow id="Flow_0jxxqmw" name="Not Approved" sourceRef="Gateway_0qrrcvk" targetRef="Event_09sbhiw">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=CONTINUE_PROCESS=false</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_00q33yz" sourceRef="Event_09sbhiw" targetRef="Event_1skovf8" />
+    <bpmn:sequenceFlow id="Flow_00q33yz" sourceRef="Event_09sbhiw" targetRef="patch-decline" />
     <bpmn:sequenceFlow id="Flow_1m88hvn" sourceRef="Event_0fzsouv" targetRef="Event_0qr31yr" />
     <bpmn:sequenceFlow id="Flow_18u6znn" sourceRef="process_ETL" targetRef="patch_on_db" />
     <bpmn:sequenceFlow id="Flow_0jl9jvu" sourceRef="patch_on_db" targetRef="Event_08hq0je" />
@@ -302,9 +309,6 @@
       <bpmn:outgoing>Flow_00q33yz</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_0w5pglx" />
     </bpmn:intermediateThrowEvent>
-    <bpmn:endEvent id="Event_1skovf8">
-      <bpmn:incoming>Flow_00q33yz</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:serviceTask id="find_line_manager" name="Find Line Managers">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="do_nothing" />
@@ -317,6 +321,57 @@
       <bpmn:outgoing>Flow_0oa9jzx</bpmn:outgoing>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_12f8zn6" />
     </bpmn:boundaryEvent>
+    <bpmn:endEvent id="Event_1skovf8">
+      <bpmn:incoming>Flow_1mho92n</bpmn:incoming>
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_12uwwv5" />
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="patch-decline" name="Patch Push on DB" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="PATCH" target="method" />
+          <zeebe:input source="=&#34;http://localhost:2020/v1/api/push-notification/extended/patch-on-db/&#34; + type" target="url" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="0" target="writeTimeoutInSeconds" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="errorExpression" value="=if error.code = &#34;412&#34; then&#10;bpmnError(&#34;precondition_error_handling&#34;, &#34;Precondition Fail, Transaction Not Found&#34;) else if error.code = &#34;400&#34; then&#10;bpmnError(&#34;bad_request_error_handling&#34;, &#34;Bad Request, Transaction Not Found&#34;)  else if error.code = &#34;503&#34; then&#10;bpmnError(&#34;service_unavailable_error_handling&#34;, &#34;Service Unavailable, Transaction Not Found&#34;) else&#10;  null" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_00q33yz</bpmn:incoming>
+      <bpmn:outgoing>Flow_1mho92n</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_0i19e8z" attachedToRef="patch-decline">
+      <bpmn:outgoing>Flow_1ok851u</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_106qpw2" errorRef="Error_0zz46be" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_1jo3vxf" attachedToRef="patch-decline">
+      <bpmn:outgoing>Flow_1xql8wm</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1dssxyp" errorRef="Error_0k04hgn" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="Event_1tms5ac" attachedToRef="patch-decline">
+      <bpmn:outgoing>Flow_0h1q5mp</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1g8pu02" errorRef="Error_0akto76" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1mho92n" sourceRef="patch-decline" targetRef="Event_1skovf8" />
+    <bpmn:endEvent id="Event_014k8ph" name="bad request error">
+      <bpmn:incoming>Flow_0h1q5mp</bpmn:incoming>
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_0mz9pxc" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_1xgmd3r" name="pre-condition error">
+      <bpmn:incoming>Flow_1xql8wm</bpmn:incoming>
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_1sm6n2r" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="Event_15baheh" name="service unavailable">
+      <bpmn:incoming>Flow_1ok851u</bpmn:incoming>
+      <bpmn:terminateEventDefinition id="TerminateEventDefinition_098e0gx" />
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1ok851u" sourceRef="Event_0i19e8z" targetRef="Event_15baheh" />
+    <bpmn:sequenceFlow id="Flow_0h1q5mp" sourceRef="Event_1tms5ac" targetRef="Event_014k8ph" />
+    <bpmn:sequenceFlow id="Flow_1xql8wm" sourceRef="Event_1jo3vxf" targetRef="Event_1xgmd3r" />
   </bpmn:process>
   <bpmn:error id="Error_0akto76" name="bad_request_error_handling" errorCode="bad_request_error_handling" />
   <bpmn:error id="Error_0k04hgn" name="precondition_error_handling" errorCode="precondition_error_handling" />
@@ -454,11 +509,33 @@
           <dc:Bounds x="1063" y="656" width="74" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1skovf8_di" bpmnElement="Event_1skovf8">
-        <dc:Bounds x="1132" y="82" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_05kmyjo_di" bpmnElement="find_line_manager">
         <dc:Bounds x="370" y="380" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1n578dd_di" bpmnElement="Event_1skovf8">
+        <dc:Bounds x="1132" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0q6f03i" bpmnElement="patch-decline">
+        <dc:Bounds x="1100" y="360" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1myxq06" bpmnElement="Event_014k8ph" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="1082" y="272" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1062" y="242" width="85" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_15k4bht" bpmnElement="Event_1xgmd3r" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="1182" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1172" y="232" width="64" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0j4qrjg" bpmnElement="Event_15baheh" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="1082" y="502" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1073" y="545" width="56" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0hgrstu_di" bpmnElement="Event_0hgrstu">
         <dc:Bounds x="452" y="442" width="36" height="36" />
@@ -489,6 +566,15 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1nmgj0v_di" bpmnElement="Event_1nmgj0v">
         <dc:Bounds x="562" y="362" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0i7mma0" bpmnElement="Event_0i19e8z">
+        <dc:Bounds x="1082" y="422" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1ucvx63" bpmnElement="Event_1jo3vxf">
+        <dc:Bounds x="1182" y="342" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1nw7ole" bpmnElement="Event_1tms5ac">
+        <dc:Bounds x="1082" y="342" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0ahcj4h_di" bpmnElement="Flow_0ahcj4h">
         <di:waypoint x="243" y="118" />
@@ -556,7 +642,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_00q33yz_di" bpmnElement="Flow_00q33yz">
         <di:waypoint x="1150" y="672" />
-        <di:waypoint x="1150" y="118" />
+        <di:waypoint x="1150" y="440" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1m88hvn_di" bpmnElement="Flow_1m88hvn">
         <di:waypoint x="1310" y="698" />
@@ -602,6 +688,22 @@
       <bpmndi:BPMNEdge id="Flow_13rsece_di" bpmnElement="Flow_13rsece">
         <di:waypoint x="960" y="1090" />
         <di:waypoint x="1012" y="1090" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mho92n_di" bpmnElement="Flow_1mho92n">
+        <di:waypoint x="1150" y="360" />
+        <di:waypoint x="1150" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ok851u_di" bpmnElement="Flow_1ok851u">
+        <di:waypoint x="1100" y="458" />
+        <di:waypoint x="1100" y="502" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h1q5mp_di" bpmnElement="Flow_0h1q5mp">
+        <di:waypoint x="1100" y="342" />
+        <di:waypoint x="1100" y="308" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xql8wm_di" bpmnElement="Flow_1xql8wm">
+        <di:waypoint x="1200" y="342" />
+        <di:waypoint x="1200" y="298" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_0rs833i_di" bpmnElement="TextAnnotation_0rs833i">
         <dc:Bounds x="300" y="310" width="150" height="30" />
