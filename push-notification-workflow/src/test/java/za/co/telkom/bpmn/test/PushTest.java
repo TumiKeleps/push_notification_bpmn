@@ -10,6 +10,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
@@ -48,14 +49,68 @@ public class PushTest {
 
 	private static ClientAndServer mockServer;
 
-	// @BeforeAll
-	// static void startMockito() {
+	@Test
+	public void push_notification_happy() throws Exception {
+		mockServer = startClientAndServer(2020);
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+		MockServerClient mockServerClient = new MockServerClient("localhost", 2020);
 
-	// }
+		mockServerClient
+				.when(
+						request()
+								.withMethod("POST")
+								.withPath("/v1/api/push-notification/extended/create/hybrid"))
+				.respond(
 
-	// Test RICA end to end happy day
+						response().withStatusCode(200)
+								.withHeaders(
+										new Header("Content-Type", "application/json; charset=utf-8"),
+										new Header("Cache-Control", "public, max-age=86400")));
 
-	
+								
+
+		mockServerClient
+				.when(
+						request()
+								.withMethod("PATCH")
+								.withPath("/v1/api/push-notification/extended/patch-on-db/hybrid"))
+				.respond(
+
+						response().withStatusCode(200)
+								.withHeaders(
+										new Header("Content-Type", "application/json; charset=utf-8"),
+										new Header("Cache-Control", "public, max-age=86400")));
+
+
+             ZonedDateTime launchTime = ZonedDateTime.now().plusSeconds(20);
+			 String dayBeforeDuration = "PT20S"; // 20 seconds before the launchTime
+            String dayAfterDuration = "PT20S";
+		ProcessInstanceEvent processInstance = zeebe.newCreateInstanceCommand()
+				.bpmnProcessId("process-push-notification")
+				.latestVersion()
+				.variables(Map.of("type", "hybrid", "approval", "approved",
+						"CONTINUE_PROCESS", true , "launchTime", launchTime.toString(), "dayBefore", dayBeforeDuration, "dayAfter", dayAfterDuration
+
+				))
+				.send()
+				.join();
+
+		waitForUserTaskAndComplete("await-approval", Map.of("approval", "approved", "launchTime", launchTime.toString(), "dayBefore", dayBeforeDuration, "dayAfter", dayAfterDuration
+		));
+
+		waitForProcessInstanceCompleted(processInstance, Duration.ofSeconds(100));
+
+		assertThat(processInstance)
+		.hasPassedElement("find_line_manager")
+		.hasPassedElement("create_on_db")
+		.hasPassedElement("await-approval")
+		.hasPassedElement("process_ETL")
+		.hasPassedElement("patch_on_db")
+		.isCompleted();
+
+		
+
+	}
 
 	public void waitForUserTaskAndComplete(String userTaskId, Map<String, Object> variables)
 			throws InterruptedException, TimeoutException {
@@ -81,7 +136,6 @@ public class PushTest {
 		} else {
 			zeebe.newCompleteCommand(userTaskJob.getKey()).send().join();
 
-			
 		}
 	}
 
