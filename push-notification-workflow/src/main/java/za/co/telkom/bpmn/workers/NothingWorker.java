@@ -16,4 +16,10 @@ public class NothingWorker {
 		log.info("End : Do Nothing");
 	}
 
+	// @JobWorker(type = "send_notification", autoComplete = true)
+	// public void sendemail(){
+	// 	log.info("sending an email");
+	// 	log.info("successfully sent the email");
+	// }
+
 }

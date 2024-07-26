@@ -121,12 +121,10 @@
         <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
         <zeebe:ioMapping>
           <zeebe:input source="noAuth" target="authentication.type" />
-          <zeebe:input source="POST" target="method" />
-          <zeebe:input source="=&#34;http://localhost:2020/v1/api/push-notification/extended/create/&#34; + type" target="url" />
+          <zeebe:input source="GET" target="method" />
+          <zeebe:input source="=&#34;https://api.restful-api.dev/objects?id=3&#38;id=5&#38;id=10&#34;" target="url" />
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
           <zeebe:input source="20" target="readTimeoutInSeconds" />
-          <zeebe:input source="0" target="writeTimeoutInSeconds" />
-          <zeebe:input source="={&#10;&#34;type&#34; : type&#10;}" target="body" />
         </zeebe:ioMapping>
         <zeebe:taskHeaders>
           <zeebe:header key="resultVariable" value="result" />
@@ -147,7 +145,7 @@
         <zeebe:ioMapping>
           <zeebe:input source="noAuth" target="authentication.type" />
           <zeebe:input source="PATCH" target="method" />
-          <zeebe:input source="=&#34;http://localhost:2020/v1/api/push-notification/extended/patch-on-db/&#34; + type" target="url" />
+          <zeebe:input source="=&#34;https://api.restful-api.dev/objects?id=3&#38;id=5&#38;id=10&#34;" target="url" />
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
           <zeebe:input source="20" target="readTimeoutInSeconds" />
           <zeebe:input source="0" target="writeTimeoutInSeconds" />
@@ -189,7 +187,7 @@
     </bpmn:endEvent>
     <bpmn:intermediateThrowEvent id="notify_line_manager" name="notify line manager">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="send-notification" />
+        <zeebe:taskDefinition type="do_nothing" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0r24wl7</bpmn:incoming>
       <bpmn:incoming>Flow_0uzx8yh</bpmn:incoming>
@@ -316,7 +314,7 @@
         <zeebe:ioMapping>
           <zeebe:input source="noAuth" target="authentication.type" />
           <zeebe:input source="PATCH" target="method" />
-          <zeebe:input source="=&#34;http://localhost:2020/v1/api/push-notification/extended/patch-on-db/&#34; + type" target="url" />
+          <zeebe:input source="=&#34;https://api.restful-api.dev/objects?id=3&#38;id=5&#38;id=10&#34;" target="url" />
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
           <zeebe:input source="20" target="readTimeoutInSeconds" />
           <zeebe:input source="0" target="writeTimeoutInSeconds" />
@@ -363,7 +361,7 @@
         <zeebe:ioMapping>
           <zeebe:input source="noAuth" target="authentication.type" />
           <zeebe:input source="GET" target="method" />
-          <zeebe:input source="=&#34;http://localhost:2020/v1/api/push-notification/extended/create/&#34; + type" target="url" />
+          <zeebe:input source="=&#34;https://api.restful-api.dev/objects?id=3&#38;id=5&#38;id=10&#34;" target="url" />
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
           <zeebe:input source="20" target="readTimeoutInSeconds" />
         </zeebe:ioMapping>
@@ -588,6 +586,24 @@
           <dc:Bounds x="822" y="922" width="85" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_02m704m" bpmnElement="Event_0456ky1">
+        <dc:Bounds x="842" y="1092" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_07j328b" bpmnElement="Event_01v42on">
+        <dc:Bounds x="942" y="1012" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1y49z7k" bpmnElement="Event_1isgdw5">
+        <dc:Bounds x="842" y="1012" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1nw7ole" bpmnElement="Event_1tms5ac">
+        <dc:Bounds x="1082" y="342" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1ucvx63" bpmnElement="Event_1jo3vxf">
+        <dc:Bounds x="1182" y="342" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0i7mma0" bpmnElement="Event_0i19e8z">
+        <dc:Bounds x="1082" y="422" width="36" height="36" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0hgrstu_di" bpmnElement="Event_0hgrstu">
         <dc:Bounds x="452" y="442" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -617,24 +633,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1nmgj0v_di" bpmnElement="Event_1nmgj0v">
         <dc:Bounds x="562" y="362" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0i7mma0" bpmnElement="Event_0i19e8z">
-        <dc:Bounds x="1082" y="422" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1ucvx63" bpmnElement="Event_1jo3vxf">
-        <dc:Bounds x="1182" y="342" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1nw7ole" bpmnElement="Event_1tms5ac">
-        <dc:Bounds x="1082" y="342" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1y49z7k" bpmnElement="Event_1isgdw5">
-        <dc:Bounds x="842" y="1012" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_07j328b" bpmnElement="Event_01v42on">
-        <dc:Bounds x="942" y="1012" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_02m704m" bpmnElement="Event_0456ky1">
-        <dc:Bounds x="842" y="1092" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0ahcj4h_di" bpmnElement="Flow_0ahcj4h">
         <di:waypoint x="243" y="118" />
@@ -777,10 +775,6 @@
         <di:waypoint x="960" y="1012" />
         <di:waypoint x="960" y="988" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_0v3tmg5_di" bpmnElement="Association_0v3tmg5">
-        <di:waypoint x="927" y="926" />
-        <di:waypoint x="940" y="924" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_0rs833i_di" bpmnElement="TextAnnotation_0rs833i">
         <dc:Bounds x="300" y="310" width="150" height="30" />
         <bpmndi:BPMNLabel />
@@ -791,6 +785,10 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_1cx174b_di" bpmnElement="TextAnnotation_1cx174b">
         <dc:Bounds x="950" y="770" width="99.99274099883856" height="68" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1h8k7rm_di" bpmnElement="TextAnnotation_1h8k7rm">
+        <dc:Bounds x="940" y="900" width="100" height="50" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_0o10aja_di" bpmnElement="TextAnnotation_0o10aja">
@@ -821,10 +819,10 @@
         <di:waypoint x="925" y="840" />
         <di:waypoint x="950" y="821" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="TextAnnotation_1h8k7rm_di" bpmnElement="TextAnnotation_1h8k7rm">
-        <dc:Bounds x="940" y="900" width="100" height="50" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0v3tmg5_di" bpmnElement="Association_0v3tmg5">
+        <di:waypoint x="927" y="926" />
+        <di:waypoint x="940" y="924" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
