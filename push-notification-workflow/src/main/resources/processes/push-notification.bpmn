@@ -121,10 +121,12 @@
         <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
         <zeebe:ioMapping>
           <zeebe:input source="noAuth" target="authentication.type" />
-          <zeebe:input source="GET" target="method" />
-          <zeebe:input source="=&#34;https://api.restful-api.dev/objects?id=3&#38;id=5&#38;id=10&#34;" target="url" />
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="=&#34;http://localhost:8045/api/v1/push-notification&#34;" target="url" />
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
           <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="0" target="writeTimeoutInSeconds" />
+          <zeebe:input source="{&#10;    &#34;username&#34;: &#34;tumi11s&#34;,&#10;    &#34;launchTime&#34;: &#34;2024-07-30T07:39:35.989+00:00&#34;,&#10;    &#34;startDate&#34;: &#34;2024-07-30T07:39:35.989+00:00&#34;,&#10;    &#34;endDate&#34;: &#34;2024-07-30T07:39:35.989+00:00&#34;,&#10;    &#34;header&#34;: &#34;headers&#34;,&#10;    &#34;body&#34;: &#34;dogs run&#34;,&#10;    &#34;campaignType&#34;: &#34;GENERAL&#34;&#10;}&#10;" target="body" />
         </zeebe:ioMapping>
         <zeebe:taskHeaders>
           <zeebe:header key="resultVariable" value="result" />
@@ -187,7 +189,7 @@
     </bpmn:endEvent>
     <bpmn:intermediateThrowEvent id="notify_line_manager" name="notify line manager">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="do_nothing" />
+        <zeebe:taskDefinition type="send_mail" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0r24wl7</bpmn:incoming>
       <bpmn:incoming>Flow_0uzx8yh</bpmn:incoming>
@@ -211,6 +213,7 @@
       <bpmn:messageEventDefinition id="MessageEventDefinition_0nr03pc" />
     </bpmn:intermediateThrowEvent>
     <bpmn:userTask id="await-approval" name="Await Approval">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_1fyaiqv</bpmn:incoming>
       <bpmn:outgoing>Flow_09vag7j</bpmn:outgoing>
     </bpmn:userTask>
