@@ -258,7 +258,7 @@
     <bpmn:boundaryEvent id="Event_1ru1aw7" attachedToRef="await-approval">
       <bpmn:outgoing>Flow_07y6fbf</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_1t96gz6">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">=dayAfter</bpmn:timeDuration>
+        <bpmn:timeDate xsi:type="bpmn:tFormalExpression">=dayAfter</bpmn:timeDate>
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
     <bpmn:boundaryEvent id="Event_1uw37x5" attachedToRef="await-approval">
@@ -270,7 +270,7 @@
     <bpmn:boundaryEvent id="Event_16298o9" cancelActivity="false" attachedToRef="await-approval">
       <bpmn:outgoing>Flow_0vzhf6x</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_0xy1r94">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">=dayBefore</bpmn:timeDuration>
+        <bpmn:timeDate xsi:type="bpmn:tFormalExpression">=dayBefore</bpmn:timeDate>
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
     <bpmn:endEvent id="Event_1aphayq">
@@ -316,11 +316,10 @@
         <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
         <zeebe:ioMapping>
           <zeebe:input source="noAuth" target="authentication.type" />
-          <zeebe:input source="PATCH" target="method" />
+          <zeebe:input source="GET" target="method" />
           <zeebe:input source="=&#34;https://api.restful-api.dev/objects?id=3&#38;id=5&#38;id=10&#34;" target="url" />
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
           <zeebe:input source="20" target="readTimeoutInSeconds" />
-          <zeebe:input source="0" target="writeTimeoutInSeconds" />
         </zeebe:ioMapping>
         <zeebe:taskHeaders>
           <zeebe:header key="errorExpression" value="=if error.code = &#34;412&#34; then&#10;bpmnError(&#34;precondition_error_handling&#34;, &#34;Precondition Fail, Transaction Not Found&#34;) else if error.code = &#34;400&#34; then&#10;bpmnError(&#34;bad_request_error_handling&#34;, &#34;Bad Request, Transaction Not Found&#34;)  else if error.code = &#34;503&#34; then&#10;bpmnError(&#34;service_unavailable_error_handling&#34;, &#34;Service Unavailable, Transaction Not Found&#34;) else&#10;  null" />
@@ -791,7 +790,7 @@
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_1h8k7rm_di" bpmnElement="TextAnnotation_1h8k7rm">
-        <dc:Bounds x="940" y="900" width="100" height="50" />
+        <dc:Bounds x="690" y="950" width="100" height="50" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_0o10aja_di" bpmnElement="TextAnnotation_0o10aja">
@@ -823,8 +822,8 @@
         <di:waypoint x="950" y="821" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Association_0v3tmg5_di" bpmnElement="Association_0v3tmg5">
-        <di:waypoint x="927" y="926" />
-        <di:waypoint x="940" y="924" />
+        <di:waypoint x="892" y="933" />
+        <di:waypoint x="790" y="955" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
