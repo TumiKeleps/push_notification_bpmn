@@ -1,20 +1,17 @@
 package za.co.telkom.bpmn.workers;
 
-//import org.apache.commons.collections4.map.HashedMap;
-import org.springframework.http.MediaType;
+import static io.restassured.RestAssured.given;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 
-import io.camunda.zeebe.client.api.response.ActivatedJob;
-import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import lombok.extern.slf4j.Slf4j;
-
-import static io.restassured.RestAssured.given;
-
-import java.util.*;
-import io.restassured.*;
 
 @Slf4j
 @Component
@@ -41,8 +38,7 @@ public class NothingWorker {
 		requestMap.put("receivers", List.of("ritshidzenemu@gmail.com"));
 		requestMap.put("process_id", "kgklkhkl541215");
 		requestMap.put("template_key", "push_notification");
-		Gson emailBody = new Gson();
-		String emailRequestBody = emailBody.toJson(requestMap);
+		String emailRequestBody = new Gson().toJson(requestMap);
 		given()
 				.accept("application/json")
 				.contentType("application/json")

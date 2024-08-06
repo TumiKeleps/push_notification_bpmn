@@ -5,9 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +27,7 @@ import io.camunda.tasklist.exception.TaskListException;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
 import lombok.extern.slf4j.Slf4j;
-import za.co.telkom.bpmn.Variables.ProcessVariableHolder;
+import za.co.telkom.bpmn.Response.GenericResponse;
 import  za.co.telkom.bpmn.utils.Dater;
 
 @RestController
@@ -39,30 +37,31 @@ public class PushNotificationController {
 	@Autowired
 	private ZeebeClient client;
 
-	@PostMapping("/id/{id}")
-	public String vetIBody(@RequestBody String body,@PathVariable(name = "id") String id) 
+
+	
+	@PostMapping("/start")
+	public ResponseEntity<GenericResponse> vetIBody(@RequestBody String body) 
 	{
 		
 		Map<String,String> Body = new Gson().fromJson(body, new TypeToken<Map<String, String>>() {}.getType());
-
-
-		log.info(Body.get("launchDate"));
+	
+		
 		String launchTime = Dater.ISO8601ToUTC(Body.get("launchDate"));
 		final ProcessInstanceEvent processInstanceResults = client
 				.newCreateInstanceCommand()
 				.bpmnProcessId("process-push-notification")
 				.latestVersion()
-				.variables(Map.of("id", id, "CONTINUE_PROCESS", true, "launchTime", launchTime, "dayBefore",
-				Dater.getDayBefore(launchTime), "dayAfter", Dater.getDayAfter(launchTime)))
+				.variables(Map.of("CONTINUE_PROCESS", true, "launchTime", launchTime, "dayBefore",Dater.getDayBefore(launchTime), "dayAfter", Dater.getDayAfter(launchTime), 
+				"startDate", "2024-07-30T07:39:35.989+00:00" , "endDate", "2024-07-30T07:39:35.989+00:00",
+				"username" , Body.get("username"), "body", Body.get("header"), "campaignType",Body.get("campaignType")))
 				.send()
 				.join();
-
-		ProcessVariableHolder.setProcessInstanceId(processInstanceResults.getProcessInstanceKey());
-		return processInstanceResults.getBpmnProcessId();
+				GenericResponse  response = new GenericResponse(true, "Process completed successfully." , processInstanceResults);
+		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping("/approve/{id}")
-    public @ResponseBody ResponseEntity<Map<String, Boolean>> Approval(@RequestBody String approvebody) throws TaskListException 
+    public @ResponseBody ResponseEntity<Map<String, Object>> Approval(@RequestBody String approvebody) throws TaskListException 
 	{
         //Setup authentication and client configuration
         SimpleConfig simpleConf = new SimpleConfig();
@@ -81,23 +80,24 @@ public class PushNotificationController {
                 .build();
 
         // Define the search criteria
-		String processinstanceid = Long.toString(ProcessVariableHolder.getProcessInstanceId());
+		Map<String,Object> approvalBody = new Gson().fromJson(approvebody, new TypeToken<Map<String, Object>>() {}.getType());
+		
+		String processinstanceid = (String) approvalBody.get("processinstaceid");
         TaskSearch taskSearch = new TaskSearch().setProcessInstanceKey(processinstanceid);
 		
         //Fetch tasks based on search criteria
         TaskList tasksFromInstance = clients.getTasks(taskSearch);
-		
+	
 		String id = tasksFromInstance.first().getId();
     
-		Gson gson = new Gson();
-		Map<String,Boolean> approvalBody = gson.fromJson(approvebody, new TypeToken<Map<String, Boolean>>() {}.getType());
-		
-		if(approvalBody.get("approved") != true)
+		String approved  = (String) approvalBody.get("approved");
+		log.info(approved);
+		if(!"APPROVED".equals(approved))
 			approvalBody.put("CONTINUE_PROCESS", false);
 
 		client.newCompleteCommand(Long.parseLong(id)).variables(approvalBody).send().join();
 		
-		return new ResponseEntity<Map<String,Boolean>>(approvalBody, HttpStatus.OK);
+		return new ResponseEntity<Map<String,Object>>(approvalBody, HttpStatus.OK);
 		
     }
 

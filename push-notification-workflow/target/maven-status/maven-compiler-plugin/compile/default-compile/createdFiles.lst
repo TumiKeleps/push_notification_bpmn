@@ -3,8 +3,8 @@ za/co/telkom/bpmn/WorkflowApplication.class
 za/co/telkom/bpmn/controller/PushNotificationController$1.class
 za/co/telkom/bpmn/workers/NothingWorker.class
 za/co/telkom/bpmn/utils/Dater.class
+za/co/telkom/bpmn/Response/GenericResponse.class
 io/camunda/connector/http/rest/HttpJsonFunction.class
 za/co/telkom/bpmn/workers/NotificationWorker.class
 za/co/telkom/bpmn/controller/PushNotificationController$2.class
 io/camunda/connector/http/rest/model/HttpJsonRequest.class
-za/co/telkom/bpmn/Variables/ProcessVariableHolder.class

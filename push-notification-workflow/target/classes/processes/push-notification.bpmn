@@ -126,10 +126,11 @@
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
           <zeebe:input source="20" target="readTimeoutInSeconds" />
           <zeebe:input source="0" target="writeTimeoutInSeconds" />
-          <zeebe:input source="{&#10;    &#34;username&#34;: &#34;tumi11s&#34;,&#10;    &#34;launchTime&#34;: &#34;2024-07-30T07:39:35.989+00:00&#34;,&#10;    &#34;startDate&#34;: &#34;2024-07-30T07:39:35.989+00:00&#34;,&#10;    &#34;endDate&#34;: &#34;2024-07-30T07:39:35.989+00:00&#34;,&#10;    &#34;header&#34;: &#34;headers&#34;,&#10;    &#34;body&#34;: &#34;dogs run&#34;,&#10;    &#34;campaignType&#34;: &#34;GENERAL&#34;&#10;}&#10;" target="body" />
+          <zeebe:input source="={&#10;    &#34;username&#34;: username,&#10;    &#34;launchTime&#34;: launchTime,&#10;    &#34;startDate&#34;:  startDate,&#10;    &#34;endDate&#34;:  endDate,&#10;    &#34;header&#34;: headers,&#10;    &#34;body&#34;: body,&#10;    &#34;campaignType&#34;: campaignType&#10;}&#10;" target="body" />
         </zeebe:ioMapping>
         <zeebe:taskHeaders>
           <zeebe:header key="resultVariable" value="result" />
+          <zeebe:header key="resultExpression" value="={&#10;  id : response.body.id&#10;}" />
           <zeebe:header key="errorExpression" value="=if error.code = &#34;412&#34; then&#10;bpmnError(&#34;precondition_error_handling&#34;, &#34;Precondition Fail, Transaction Not Found&#34;) else if error.code = &#34;400&#34; then&#10;bpmnError(&#34;bad_request_error_handling&#34;, &#34;Bad Request, Transaction Not Found&#34;)  else if error.code = &#34;503&#34; then&#10;bpmnError(&#34;service_unavailable_error_handling&#34;, &#34;Service Unavailable, Transaction Not Found&#34;) else&#10;  null" />
           <zeebe:header key="retryBackoff" value="PT0S" />
         </zeebe:taskHeaders>
@@ -147,12 +148,14 @@
         <zeebe:ioMapping>
           <zeebe:input source="noAuth" target="authentication.type" />
           <zeebe:input source="PATCH" target="method" />
-          <zeebe:input source="=&#34;https://api.restful-api.dev/objects?id=3&#38;id=5&#38;id=10&#34;" target="url" />
+          <zeebe:input source="=&#34;http://localhost:8045/api/v1/push-notification/&#34; + id" target="url" />
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
           <zeebe:input source="20" target="readTimeoutInSeconds" />
           <zeebe:input source="0" target="writeTimeoutInSeconds" />
+          <zeebe:input source="={&#10;&#34;approveEnum&#34;:&#34;APPROVED&#34;&#10;}" target="body" />
         </zeebe:ioMapping>
         <zeebe:taskHeaders>
+          <zeebe:header key="resultVariable" value="patchApprovalResults" />
           <zeebe:header key="errorExpression" value="=if error.code = &#34;412&#34; then&#10;bpmnError(&#34;precondition_error_handling&#34;, &#34;Precondition Fail, Transaction Not Found&#34;) else if error.code = &#34;400&#34; then&#10;bpmnError(&#34;bad_request_error_handling&#34;, &#34;Bad Request, Transaction Not Found&#34;)  else if error.code = &#34;503&#34; then&#10;bpmnError(&#34;service_unavailable_error_handling&#34;, &#34;Service Unavailable, Transaction Not Found&#34;) else&#10;  null" />
           <zeebe:header key="retryBackoff" value="PT0S" />
         </zeebe:taskHeaders>
@@ -316,10 +319,12 @@
         <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
         <zeebe:ioMapping>
           <zeebe:input source="noAuth" target="authentication.type" />
-          <zeebe:input source="GET" target="method" />
-          <zeebe:input source="=&#34;https://api.restful-api.dev/objects?id=3&#38;id=5&#38;id=10&#34;" target="url" />
+          <zeebe:input source="PATCH" target="method" />
+          <zeebe:input source="=&#34;http://localhost:8045/api/v1/push-notification/&#34;+id" target="url" />
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
           <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="0" target="writeTimeoutInSeconds" />
+          <zeebe:input source="={&#10;  &#34;id&#34;: id,&#10;  &#34;approve&#34;:&#34;NOT_APPROVED&#34;&#10;}" target="body" />
         </zeebe:ioMapping>
         <zeebe:taskHeaders>
           <zeebe:header key="errorExpression" value="=if error.code = &#34;412&#34; then&#10;bpmnError(&#34;precondition_error_handling&#34;, &#34;Precondition Fail, Transaction Not Found&#34;) else if error.code = &#34;400&#34; then&#10;bpmnError(&#34;bad_request_error_handling&#34;, &#34;Bad Request, Transaction Not Found&#34;)  else if error.code = &#34;503&#34; then&#10;bpmnError(&#34;service_unavailable_error_handling&#34;, &#34;Service Unavailable, Transaction Not Found&#34;) else&#10;  null" />
@@ -362,10 +367,12 @@
         <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
         <zeebe:ioMapping>
           <zeebe:input source="noAuth" target="authentication.type" />
-          <zeebe:input source="GET" target="method" />
-          <zeebe:input source="=&#34;https://api.restful-api.dev/objects?id=3&#38;id=5&#38;id=10&#34;" target="url" />
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="=&#34;http://localhost:8045/api/v1/push-notification&#34;" target="url" />
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
           <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="0" target="writeTimeoutInSeconds" />
+          <zeebe:input source="={&#10;  &#34;id&#34;: id,&#10;  &#34;approve&#34;:&#34;EXPIRED&#34;&#10;}" target="body" />
         </zeebe:ioMapping>
         <zeebe:taskHeaders>
           <zeebe:header key="retryBackoff" value="PT0S" />
@@ -585,7 +592,7 @@
       <bpmndi:BPMNShape id="BPMNShape_1tvx1bi" bpmnElement="Event_14tzz9w" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
         <dc:Bounds x="842" y="952" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="822" y="922" width="85" height="14" />
+          <dc:Bounds x="767" y="993" width="85" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_02m704m" bpmnElement="Event_0456ky1">
